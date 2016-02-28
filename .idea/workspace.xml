@@ -36,10 +36,13 @@
       <file leaf-file-name="shitcode.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/shitcode.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.4072165">
-              <caret line="246" column="50" selection-start-line="246" selection-start-column="50" selection-end-line="246" selection-end-column="50" />
+            <state vertical-scroll-proportion="0.24632953">
+              <caret line="86" column="70" selection-start-line="86" selection-start-column="70" selection-end-line="86" selection-end-column="70" />
               <folding>
                 <element signature="n#!!doc" expanded="true" />
+                <element signature="n#!!block;n#Background#0" expanded="false" />
+                <element signature="n#!!block;n#DrawManager#0" expanded="false" />
+                <element signature="e#9413#10982#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -248,6 +251,9 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="n#!!doc" expanded="true" />
+            <element signature="n#!!block;n#Background#0" expanded="false" />
+            <element signature="n#!!block;n#DrawManager#0" expanded="false" />
+            <element signature="e#9413#10982#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -277,10 +283,13 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/shitcode.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.4072165">
-          <caret line="246" column="50" selection-start-line="246" selection-start-column="50" selection-end-line="246" selection-end-column="50" />
+        <state vertical-scroll-proportion="0.24632953">
+          <caret line="86" column="70" selection-start-line="86" selection-start-column="70" selection-end-line="86" selection-end-column="70" />
           <folding>
             <element signature="n#!!doc" expanded="true" />
+            <element signature="n#!!block;n#Background#0" expanded="false" />
+            <element signature="n#!!block;n#DrawManager#0" expanded="false" />
+            <element signature="e#9413#10982#0" expanded="false" />
           </folding>
         </state>
       </provider>
