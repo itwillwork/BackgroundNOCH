@@ -17,14 +17,14 @@ var playerPosition = {
     x: 1250,
     y: 3400
 };
-var coef = 1;
+var coefScale = 1;
 //эмуляция ресайза
 setTimeout(function () {
     setInterval(function () {
-        if (coef < 3) {
-            coef += 0.1;
+        if (coefScale < 2) {
+            coefScale += 0.01;
         }
-    }, 1000);
+    }, 27);
 },5000);
 /*
  =============================================================================
@@ -80,7 +80,7 @@ Background.prototype.tick = function () {
 };
 
 function CollectionBackgroundItem() {
-    this.collectionOfLevel = [ [], [], [], [] ];
+    this.collectionOfLevels = [ [], [], [], [] ];
     this.densityOfLevel = [90000, 90000, 120000, 240000];
     this.coefForMovie = [1, 0.8, 0.3, 0.1];
     var baseCatalog = "images/",
@@ -99,23 +99,23 @@ function CollectionBackgroundItem() {
                 count: 29
             }
         ];
-    for (var i = 0; i < this.collectionOfLevel.length; i++) {
+    for (var i = 0; i < this.collectionOfLevels.length; i++) {
         //2 * gameSize.x потому что нужно захватить еще и не отображаемые поля
         var count = (2 * gameSize.x) * (2 * gameSize.y) / this.densityOfLevel[i];
-        while (this.collectionOfLevel[i].length < count) {
+        while (this.collectionOfLevels[i].length < count) {
             //пришлось манипулировать с единицами так, как номера картинок начинаются с 1, а не с 0
             var randomIndexImage  = Math.floor( Math.random() * (collectionOfImages[i].count - 1) + 1),
                 randomImageSrc = baseCatalog + collectionOfImages[i].prefix + randomIndexImage + ".png";
-            this.collectionOfLevel[i].push( new BackgroundItem(randomImageSrc, this.coefForMovie[i]) );
+            this.collectionOfLevels[i].push( new BackgroundItem(randomImageSrc, this.coefForMovie[i]) );
         }
     }
 }
 CollectionBackgroundItem.prototype.tick = function (stage, deltaPlayerPosition) {
-    for (var i = 0; i < this.collectionOfLevel.length; i++) {
-        for (var j = 0; j < this.collectionOfLevel[i].length; j++) {
-            this.holdIfGetOut( this.collectionOfLevel[i][j] );
-            this.collectionOfLevel[i][j].tick(deltaPlayerPosition);
-            this.collectionOfLevel[i][j].draw(stage);
+    for (var i = 0; i < this.collectionOfLevels.length; i++) {
+        for (var j = 0; j < this.collectionOfLevels[i].length; j++) {
+            this.holdIfGetOut( this.collectionOfLevels[i][j] );
+            this.collectionOfLevels[i][j].tick(deltaPlayerPosition);
+            this.collectionOfLevels[i][j].draw(stage);
         }
     }
 };
@@ -168,10 +168,13 @@ BackgroundItem.prototype.tick = function (deltaPlayerPosition) {
     this.playerMovie(deltaPlayerPosition);
 };
 BackgroundItem.prototype.draw = function (context) {
-    this.bitmap.x = this.position.x - (playerPosition.x - gameSize.x / 2);
-    this.bitmap.y = this.position.y - (playerPosition.y - gameSize.y / 2);
-    this.bitmap.rotation = this.angle;
-    context.addChild(this.bitmap);
+    var bitmap = this.bitmap;
+    bitmap.x = this.position.x - (playerPosition.x - gameSize.x / 2);
+    bitmap.y = this.position.y - (playerPosition.y - gameSize.y / 2);
+    bitmap.rotation = this.angle;
+    bitmap.scaleX = 1/coefScale;
+    bitmap.scaleY = 1/coefScale;
+    context.addChild(bitmap);
 };
 var background = new Background(stage);
 requestAnimationFrame( background.tick.bind(background) );
