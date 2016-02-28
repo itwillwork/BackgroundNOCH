@@ -1,6 +1,4 @@
-//TODO движение за позицией игрока
 //TODO масштабирование
-//TODO оптимизация
 /*
  =============================================================================
  Данные для отладки
@@ -19,9 +17,15 @@ var playerPosition = {
     x: 1250,
     y: 3400
 };
-/*
- var coef = 1;
- */
+var coef = 1;
+//эмуляция ресайза
+setTimeout(function () {
+    setInterval(function () {
+        if (coef < 3) {
+            coef += 0.1;
+        }
+    }, 1000);
+},5000);
 /*
  =============================================================================
  */
@@ -77,7 +81,7 @@ Background.prototype.tick = function () {
 
 function CollectionBackgroundItem() {
     this.collectionOfLevel = [ [], [], [], [] ];
-    this.densityOfLevel = [50, 300, 500, 600];
+    this.densityOfLevel = [90000, 90000, 120000, 240000];
     this.coefForMovie = [1, 0.8, 0.3, 0.1];
     var baseCatalog = "images/",
         collectionOfImages = [
@@ -97,7 +101,7 @@ function CollectionBackgroundItem() {
         ];
     for (var i = 0; i < this.collectionOfLevel.length; i++) {
         //2 * gameSize.x потому что нужно захватить еще и не отображаемые поля
-        var count = 2 * gameSize.x / this.densityOfLevel[i];
+        var count = (2 * gameSize.x) * (2 * gameSize.y) / this.densityOfLevel[i];
         while (this.collectionOfLevel[i].length < count) {
             //пришлось манипулировать с единицами так, как номера картинок начинаются с 1, а не с 0
             var randomIndexImage  = Math.floor( Math.random() * (collectionOfImages[i].count - 1) + 1),
@@ -132,7 +136,8 @@ CollectionBackgroundItem.prototype.holdIfGetOut = function ( nodeBackground ) {
 
 function BackgroundItem(src, coefForMove) {
     var MAX_VELOCITY = 0.3,
-        MAX_RAD_VELOCITY = 0.5;
+        MAX_RAD_VELOCITY = 0.5,
+        image;
     this.position = {
         x: playerPosition.x + Math.floor( Math.random() * (2 * gameSize.x) - gameSize.x),
         y: playerPosition.y + Math.floor( Math.random() * (2 * gameSize.y) - gameSize.y)
@@ -144,8 +149,10 @@ function BackgroundItem(src, coefForMove) {
     };
     this.angle = Math.random() * (2 * MAX_RAD_VELOCITY) - MAX_RAD_VELOCITY;
     this.radVelocity = Math.random() * (2 * MAX_RAD_VELOCITY) - MAX_RAD_VELOCITY;
-    this.src = src;
     this.coefForMove = coefForMove;
+    image = new Image();
+    image.src = src;
+    this.bitmap = new createjs.Bitmap(image);
 }
 BackgroundItem.prototype.selfMovie = function () {
     this.position.x += this.coefForMove  * this.velocity.x;
@@ -161,13 +168,10 @@ BackgroundItem.prototype.tick = function (deltaPlayerPosition) {
     this.playerMovie(deltaPlayerPosition);
 };
 BackgroundItem.prototype.draw = function (context) {
-    var image = new Image();
-    image.src = this.src;
-    var bitmap = new createjs.Bitmap(image);
-    bitmap.x = this.position.x - (playerPosition.x - gameSize.x / 2);
-    bitmap.y = this.position.y - (playerPosition.y - gameSize.y / 2);
-    bitmap.rotation = this.angle;
-    context.addChild(bitmap);
+    this.bitmap.x = this.position.x - (playerPosition.x - gameSize.x / 2);
+    this.bitmap.y = this.position.y - (playerPosition.y - gameSize.y / 2);
+    this.bitmap.rotation = this.angle;
+    context.addChild(this.bitmap);
 };
 var background = new Background(stage);
 requestAnimationFrame( background.tick.bind(background) );
