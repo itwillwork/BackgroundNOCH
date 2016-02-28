@@ -28,30 +28,27 @@ setTimeout(function () {
 },1000);
 
 /*
-var coefScale = 0.25;
-setTimeout(function () {
-    setInterval(function () {
-        if (coefScale < 1) {
-            coefScale += 0.05;
-        }
-    }, 27);
-},1000);
-/*
+ var coefScale = 0.25;
+ setTimeout(function () {
+ setInterval(function () {
+ if (coefScale < 1) {
+ coefScale += 0.05;
+ }
+ }, 27);
+ },1000);
+ /*
  =============================================================================
  */
 
-var drawManager = new DrawManager("backgroundLayer");
-var background = new Background();
-requestAnimationFrame( background.tick.bind(background) );
 
-function Background() {
+var Background = function () {
     this.collectionBackgroundItem = new CollectionBackgroundItem();
     this.prevPlayerPosition = {
         x: playerPosition.x,
         y: playerPosition.y
     };
     this.prevCoefScale = coefScale;
-}
+};
 Background.prototype = {
     tick: function () {
         // TODO удалить
@@ -67,9 +64,9 @@ Background.prototype = {
                 y: playerPosition.y - this.prevPlayerPosition.y
             },
             deltaCoefScale =  this.prevCoefScale - coefScale;
-        drawManager.clearScreen();
+        //drawManager.clearScreen();
         this.collectionBackgroundItem.tick(deltaPlayerPosition, deltaCoefScale);
-        drawManager.updateScreen();
+        //drawManager.updateScreen();
         this.prevPlayerPosition = {
             x: playerPosition.x,
             y: playerPosition.y
@@ -79,13 +76,13 @@ Background.prototype = {
     }
 };
 
-function CollectionBackgroundItem() {
+var CollectionBackgroundItem = function () {
     this.collectionOfLevels = [ [], [], [], [] ];
     this.densityOfLevel = [60000, 100000, 240000, 130000];
     this.coefForMovie = [1, 0.5, 0.1, 0.01];
     this.fillingArea(playerPosition.x - gameSize.x, playerPosition.y - gameSize.y,
         playerPosition.x + gameSize.x, playerPosition.y + gameSize.y);
-}
+};
 CollectionBackgroundItem.prototype = {
     //constructor: CollectionBackgroundItem,
     fillingArea: function (minX, minY, maxX, maxY) {
@@ -131,7 +128,7 @@ CollectionBackgroundItem.prototype = {
                 if (deltaPlayerPosition) {
                     this.collectionOfLevels[i][j].tick(deltaPlayerPosition);
                 }
-                drawManager.drawBackgroundItem(this.collectionOfLevels[i][j]);
+                //drawManager.drawBackgroundItem(this.collectionOfLevels[i][j]);
             }
         }
     },
@@ -169,10 +166,10 @@ CollectionBackgroundItem.prototype = {
                 oldMinY = (((playerPosition.y - gameSize.y) - playerPosition.y) / (deltaCoefScale + coefScale)) * coefScale + playerPosition.y,
                 oldMaxX = (((playerPosition.x + gameSize.x) - playerPosition.x) / (deltaCoefScale + coefScale)) * coefScale + playerPosition.x,
                 oldMaxY = (((playerPosition.y + gameSize.y) - playerPosition.y) / (deltaCoefScale + coefScale)) * coefScale + playerPosition.y;
-            this.filling(newMinX, oldMinY, oldMinX, oldMaxY);
-            this.filling(newMinX, oldMaxY, newMaxX, newMaxY);
-            this.filling(newMinX, newMinY, newMaxX, oldMinY);
-            this.filling(oldMaxX, oldMinY, newMaxX, oldMaxY);
+            this.fillingArea(newMinX, oldMinY, oldMinX, oldMaxY);
+            this.fillingArea(newMinX, oldMaxY, newMaxX, newMaxY);
+            this.fillingArea(newMinX, newMinY, newMaxX, oldMinY);
+            this.fillingArea(oldMaxX, oldMinY, newMaxX, oldMaxY);
         } else {
             //уменьшение
             for (var i = 0; i < this.collectionOfLevels.length; i++) {
@@ -254,10 +251,10 @@ DrawManager.prototype = {
     isVisible: function (positionOnCanvas) {
         //TODO разобраться с оптимизацией, не получлось вернуть размер картинки, а то рисуются все картинки даже которые не попадают в канвас
         /*
-        //за правой или нижней границей
-        if (((positionOnCanvas.x - this.bitmap.width) >= gameSize.x) || ((positionOnCanvas.y - this.bitmap.height) >= gameSize.y)) {
-            return false;
-        }
+         //за правой или нижней границей
+         if (((positionOnCanvas.x - this.bitmap.width) >= gameSize.x) || ((positionOnCanvas.y - this.bitmap.height) >= gameSize.y)) {
+         return false;
+         }
          //за верхней или левой границей
          if (((positionOnCanvas.x + this.bitmap.width) <= 0) || ((positionOnCanvas.y + this.bitmap.height) <= 0)) {
          return false;
@@ -273,8 +270,6 @@ DrawManager.prototype = {
     }
 };
 
-
-
-
-
-
+//var drawManager = new DrawManager("backgroundLayer");
+var background = new Background();
+requestAnimationFrame( background.tick.bind(background) );
