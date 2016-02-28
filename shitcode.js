@@ -40,18 +40,15 @@ setTimeout(function () {
  =============================================================================
  */
 
-var drawManager = new DrawManager("backgroundLayer");
-var background = new Background();
-requestAnimationFrame( background.tick.bind(background) );
 
-function Background() {
+var Background = function () {
     this.collectionBackgroundItem = new CollectionBackgroundItem();
     this.prevPlayerPosition = {
         x: playerPosition.x,
         y: playerPosition.y
     };
     this.prevCoefScale = coefScale;
-}
+};
 Background.prototype = {
     tick: function () {
         // TODO удалить
@@ -79,13 +76,13 @@ Background.prototype = {
     }
 };
 
-function CollectionBackgroundItem() {
+var CollectionBackgroundItem = function () {
     this.collectionOfLevels = [ [], [], [], [] ];
     this.densityOfLevel = [60000, 100000, 240000, 130000];
     this.coefForMovie = [1, 0.5, 0.1, 0.01];
     this.fillingArea(playerPosition.x - gameSize.x, playerPosition.y - gameSize.y,
         playerPosition.x + gameSize.x, playerPosition.y + gameSize.y);
-}
+};
 CollectionBackgroundItem.prototype = {
     //constructor: CollectionBackgroundItem,
     fillingArea: function (minX, minY, maxX, maxY) {
@@ -169,10 +166,10 @@ CollectionBackgroundItem.prototype = {
                 oldMinY = (((playerPosition.y - gameSize.y) - playerPosition.y) / (deltaCoefScale + coefScale)) * coefScale + playerPosition.y,
                 oldMaxX = (((playerPosition.x + gameSize.x) - playerPosition.x) / (deltaCoefScale + coefScale)) * coefScale + playerPosition.x,
                 oldMaxY = (((playerPosition.y + gameSize.y) - playerPosition.y) / (deltaCoefScale + coefScale)) * coefScale + playerPosition.y;
-            this.filling(newMinX, oldMinY, oldMinX, oldMaxY);
-            this.filling(newMinX, oldMaxY, newMaxX, newMaxY);
-            this.filling(newMinX, newMinY, newMaxX, oldMinY);
-            this.filling(oldMaxX, oldMinY, newMaxX, oldMaxY);
+            this.fillingArea(newMinX, oldMinY, oldMinX, oldMaxY);
+            this.fillingArea(newMinX, oldMaxY, newMaxX, newMaxY);
+            this.fillingArea(newMinX, newMinY, newMaxX, oldMinY);
+            this.fillingArea(oldMaxX, oldMinY, newMaxX, oldMaxY);
         } else {
             //уменьшение
             for (var i = 0; i < this.collectionOfLevels.length; i++) {
@@ -273,8 +270,8 @@ DrawManager.prototype = {
     }
 };
 
-
-
-
+var drawManager = new DrawManager("backgroundLayer");
+var background = new Background();
+requestAnimationFrame( background.tick.bind(background) );
 
 
