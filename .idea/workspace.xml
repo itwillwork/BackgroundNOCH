@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="588c545d-d1c1-429e-baaf-fe2e1f1112a6" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index.html" afterPath="$PROJECT_DIR$/index.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/shitcode.js" afterPath="$PROJECT_DIR$/shitcode.js" />
     </list>
     <ignored path="backgroundBack.iws" />
@@ -37,8 +36,8 @@
       <file leaf-file-name="shitcode.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/shitcode.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.31810766">
-              <caret line="258" column="24" selection-start-line="258" selection-start-column="24" selection-end-line="258" selection-end-column="24" />
+            <state vertical-scroll-proportion="0.38487974">
+              <caret line="81" column="42" selection-start-line="81" selection-start-column="42" selection-end-line="81" selection-end-column="42" />
               <folding>
                 <element signature="n#!!doc" expanded="true" />
               </folding>
@@ -285,8 +284,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/shitcode.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.31810766">
-          <caret line="258" column="24" selection-start-line="258" selection-start-column="24" selection-end-line="258" selection-end-column="24" />
+        <state vertical-scroll-proportion="0.38487974">
+          <caret line="81" column="42" selection-start-line="81" selection-start-column="42" selection-end-line="81" selection-end-column="42" />
           <folding>
             <element signature="n#!!doc" expanded="true" />
           </folding>

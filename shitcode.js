@@ -86,6 +86,7 @@ var CollectionBackgroundItem = function () {
 CollectionBackgroundItem.prototype = {
     constructor: CollectionBackgroundItem,
     fillingArea: function (minX, minY, maxX, maxY) {
+        //TODO передалать по принципу DRY
         var baseCatalog = "images/",
             collectionOfImages = [
                 {
@@ -115,7 +116,6 @@ CollectionBackgroundItem.prototype = {
                         y: Math.floor(Math.random() * (maxY - minY)) + minY
                     };
                 this.collectionOfLevels[i].push(new BackgroundItem(randomPosition, randomImageSrc, this.coefForMovie[i]));
-                drawManager.preloadImage(randomImageSrc);
             }
         }
     },
@@ -228,20 +228,40 @@ function DrawManager(idObjectForDrawing) {
     this.stage = new createjs.Stage( document.getElementById(idObjectForDrawing) );
     this.queue = new createjs.LoadQueue();
     this.queue.installPlugin(createjs.Bitmap);
-    this.flagReady = true;
     this.queue.on("complete", this.handleComplete, this);
 }
 DrawManager.prototype = {
     constructor: DrawManager,
     handleComplete: function () {
-        this.flagReady = true;
+        requestAnimationFrame( background.tick.bind(background) );
     },
-    preloadImage: function (imageSrc) {
-        this.queue.loadFile({
-            id: imageSrc,
-            src: imageSrc
-        });
-        this.flagReady = false;
+    runPreloader: function () {
+        //TODO не соответстветствует DRY
+        var baseCatalog = "images/",
+            collectionOfImages = [
+                {
+                    prefix: "3layer/q",
+                    count: 30
+                }, {
+                    prefix: "2layer/",
+                    count: 35
+                }, {
+                    prefix: "1layer/",
+                    count: 30
+                }, {
+                    prefix: "clouds/",
+                    count: 29
+                }
+            ];
+        for (var i = 0; i < collectionOfImages.length; i++) {
+            for (var j = 1; j <= collectionOfImages[i].count; j++) {
+                this.queue.loadFile({
+                    id:  baseCatalog + collectionOfImages[i].prefix + j + ".png",
+                    src:  baseCatalog + collectionOfImages[i].prefix + j + ".png"
+                });
+            }
+        }
+
     },
     drawBackgroundItem: function (itemBackground) {
         var positionOnCanvas = {
@@ -255,9 +275,6 @@ DrawManager.prototype = {
         if (!this.isVisible(positionOnCanvas)) return;
 
         image = this.queue.getResult(itemBackground.src);
-
-        if (!image) return;
-
         bitmap =  new createjs.Bitmap(image);
         bitmap.x = positionOnCanvas.x;
         bitmap.y = positionOnCanvas.y;
@@ -268,16 +285,6 @@ DrawManager.prototype = {
     },
     isVisible: function (positionOnCanvas) {
         //TODO разобраться с оптимизацией, не получлось вернуть размер картинки, а то рисуются все картинки даже которые не попадают в канвас
-        /*
-        //за правой или нижней границей
-        if (((positionOnCanvas.x - this.bitmap.width) >= gameSize.x) || ((positionOnCanvas.y - this.bitmap.height) >= gameSize.y)) {
-            return false;
-        }
-         //за верхней или левой границей
-         if (((positionOnCanvas.x + this.bitmap.width) <= 0) || ((positionOnCanvas.y + this.bitmap.height) <= 0)) {
-         return false;
-         }
-         */
         return true;
     },
     clearScreen: function () {
@@ -289,7 +296,7 @@ DrawManager.prototype = {
 };
 
 var drawManager = new DrawManager("backgroundLayer");
+drawManager.runPreloader();
 var background = new Background();
-requestAnimationFrame( background.tick.bind(background) );
 
 
