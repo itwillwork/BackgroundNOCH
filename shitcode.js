@@ -266,7 +266,7 @@ DrawManager.prototype = {
 
     },
     drawBackgroundItem: function (itemBackground) {
-        if (!preloaderFlag) return;
+        if (!this.preloaderFlag) return;
         var positionOnCanvas = {
                 x: itemBackground.position.x - (playerPosition.x - gameSize.x / 2),
                 y: itemBackground.position.y - (playerPosition.y - gameSize.y / 2)
