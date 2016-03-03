@@ -84,7 +84,7 @@ var CollectionBackgroundItem = function () {
         playerPosition.x + gameSize.x, playerPosition.y + gameSize.y);
 };
 CollectionBackgroundItem.prototype = {
-    //constructor: CollectionBackgroundItem,
+    constructor: CollectionBackgroundItem,
     fillingArea: function (minX, minY, maxX, maxY) {
         var baseCatalog = "images/",
             collectionOfImages = [
@@ -115,6 +115,7 @@ CollectionBackgroundItem.prototype = {
                         y: Math.floor(Math.random() * (maxY - minY)) + minY
                     };
                 this.collectionOfLevels[i].push(new BackgroundItem(randomPosition, randomImageSrc, this.coefForMovie[i]));
+                drawManager.preloadImage(randomImageSrc);
             }
         }
     },
@@ -225,22 +226,39 @@ BackgroundItem.prototype = {
 
 function DrawManager(idObjectForDrawing) {
     this.stage = new createjs.Stage( document.getElementById(idObjectForDrawing) );
+    this.queue = new createjs.LoadQueue();
+    this.queue.installPlugin(createjs.Bitmap);
+    this.flagReady = true;
+    this.queue.on("complete", this.handleComplete, this);
 }
 DrawManager.prototype = {
     constructor: DrawManager,
+    handleComplete: function () {
+        this.flagReady = true;
+    },
+    preloadImage: function (imageSrc) {
+        this.queue.loadFile({
+            id: imageSrc,
+            src: imageSrc
+        });
+        this.flagReady = false;
+    },
     drawBackgroundItem: function (itemBackground) {
         var positionOnCanvas = {
                 x: itemBackground.position.x - (playerPosition.x - gameSize.x / 2),
                 y: itemBackground.position.y - (playerPosition.y - gameSize.y / 2)
             },
-            bitmap;
+            bitmap,
+            image;
 
         //если объект не виден на экране не рисуем его
         if (!this.isVisible(positionOnCanvas)) return;
 
-        image = new Image();
-        image.src = itemBackground.src;
-        bitmap = new createjs.Bitmap(image);
+        image = this.queue.getResult(itemBackground.src);
+
+        if (!image) return;
+
+        bitmap =  new createjs.Bitmap(image);
         bitmap.x = positionOnCanvas.x;
         bitmap.y = positionOnCanvas.y;
         bitmap.rotation = itemBackground.angle;
