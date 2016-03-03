@@ -229,13 +229,15 @@ function DrawManager(idObjectForDrawing) {
     this.queue = new createjs.LoadQueue();
     this.queue.installPlugin(createjs.Bitmap);
     this.queue.on("complete", this.handleComplete, this);
+    this.preloaderFlag = true;
 }
 DrawManager.prototype = {
     constructor: DrawManager,
     handleComplete: function () {
-        requestAnimationFrame( background.tick.bind(background) );
+        this.preloaderFlag = true;
     },
     runPreloader: function () {
+        this.preloaderFlag = false;
         //TODO не соответстветствует DRY
         var baseCatalog = "images/",
             collectionOfImages = [
@@ -264,6 +266,7 @@ DrawManager.prototype = {
 
     },
     drawBackgroundItem: function (itemBackground) {
+        if (!preloaderFlag) return;
         var positionOnCanvas = {
                 x: itemBackground.position.x - (playerPosition.x - gameSize.x / 2),
                 y: itemBackground.position.y - (playerPosition.y - gameSize.y / 2)
@@ -298,5 +301,6 @@ DrawManager.prototype = {
 var drawManager = new DrawManager("backgroundLayer");
 drawManager.runPreloader();
 var background = new Background();
+background.tick();
 
 
